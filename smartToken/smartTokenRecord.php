@@ -38,6 +38,16 @@ class smartTokenRecord extends SmartActiveRecord{
 	}
 	//========================================
 	//获取超时时间戳
-	public function getTimeOutTimestamp(){return Yii::$app->smartToken->getTokenTimeOutTimestamp($this);}
+	public function getTimeOutTimestamp(){
+		return Yii::$app->smartToken->getTokenTimeOutTimestamp($this);
+	}
+	//========================================
+	//获取令牌信息
+	public function getInfo(){
+		$info=array();
+		$info['token']=$this->token;
+		$info['timeOut']=$this->getTimeOutTimestamp();
+		return $info;
+	}
 }
 ?>

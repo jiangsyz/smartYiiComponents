@@ -18,7 +18,7 @@ class smartPagination extends Component{
 		//获取总页数
 		$totalPageNum=ceil($totalCount/$pageSize);
 		//确定当前页数
-		$pageNum=$pageNum>$totalPageNum?$totalPageNum:$pageNum;
+		$pageNum=($pageNum>$totalPageNum)&&($totalPageNum!=0)?$totalPageNum:$pageNum;
 		//确定起始记录
 		$start=($pageNum-1)*$pageSize;
 		//获取数据
@@ -41,7 +41,7 @@ class smartPagination extends Component{
 		//获取总页数
 		$totalPageNum=ceil($totalCount/$pageSize);
 		//确定当前页数
-		$pageNum=$pageNum>$totalPageNum?$totalPageNum:$pageNum;
+		$pageNum=($pageNum>$totalPageNum)&&($totalPageNum!=0)?$totalPageNum:$pageNum;
 		//确定起始记录
 		$start=($pageNum-1)*$pageSize;
 		//更新sql

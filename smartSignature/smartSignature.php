@@ -58,11 +58,26 @@ class smartSignature extends Component{
 		unset($requestData['signature']);
 		//升序排列
 		ksort($requestData);
-		//json编码
-		$requestData=json_encode($requestData);
+		/*
+		由于跨平台,java加密时是按中文进行加密的,而经过http已经变成unicode,所以需要先转过来
+		例如java是按如下进行md5
+		{"addressId":"8","areaId":"140201","detail":"突然有一天你会发现自己说话"}^ZS2018LCJ
+		到了这里会变成
+		{"addressId":"8","areaId":"140201","detail":"\u7a81\u7136\u6709\u4e00"}^ZS2018LCJ
+		所以要逐个参数转成中文
+		*/
+		foreach($requestData as $k => $v){
+			$requestData[$k]=preg_replace_callback(
+				"#\\\u([0-9a-f]+)#i",
+				function($m){return iconv('UCS-2','UTF-8', pack('H4',$m[1]));},$v
+			);
+		}
+		//json编码(JSON_UNESCAPED_UNICODE是为了不要把中文再变成unicode)
+		$requestData=json_encode($requestData,JSON_UNESCAPED_UNICODE);
 		//连接密钥
 		$requestData=$requestData."^".$this->secretKey;
 		//签名
-		if($signature!=md5($requestData)) throw new SmartException("error signature");
+		$mySignature=md5($requestData);
+		if($signature!=$mySignature) throw new SmartException("error signature");
 	}
 }

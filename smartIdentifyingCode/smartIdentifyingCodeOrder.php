@@ -33,11 +33,11 @@ class smartIdentifyingCodeOrder extends SmartActiveRecord{
 	//验证
 	public function check($identifyingCode,$timeOut){
 		//判断订单是否被校验
-		if($this->state) throw new SmartException("state error");
+		if($this->state) throw new SmartException("验证码已被使用",-2);
 		//判断验证码
-		if($this->identifyingCode!=$identifyingCode) throw new SmartException("code error");
+		if($this->identifyingCode!=$identifyingCode) throw new SmartException("验证码错误",-2);
 		//判断超时
-		if((time()-$this->createTime)>$timeOut) throw new SmartException("time out");
+		if((time()-$this->createTime)>$timeOut) throw new SmartException("验证码超时",-2);
 		//修改状态
 		$this->updateObj(array('state'=>1));
 		//验证成功

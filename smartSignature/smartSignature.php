@@ -78,6 +78,10 @@ class smartSignature extends Component{
 		$requestData=$requestData."^".$this->secretKey;
 		//签名
 		$mySignature=md5($requestData);
+		//调试模式记录日志
+		if($this->debug===true) Yii::$app->smartLog->debugLog($requestData);
+		if($this->debug===true) Yii::$app->smartLog->debugLog($mySignature);
+		//对比签名
 		if($signature!=$mySignature) throw new SmartException("error signature");
 	}
 }

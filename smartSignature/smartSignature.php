@@ -19,6 +19,8 @@ class smartSignature extends Component{
 	public $actionWhiteList=NULL;
 	//action前缀匹配的白名单
 	public $actionPrefixWhiteList=NULL;
+	//调试模式
+	public $debug=NULL;
 	//====================================================
 	public function init(){
 		parent::init();

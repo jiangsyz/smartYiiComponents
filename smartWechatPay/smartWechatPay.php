@@ -21,6 +21,7 @@ class smartWechatPay extends Component{
 		$payManagement=NULL;
 		if($appType=='android') $payManagement=new smartAppWechatPay($this->getConf($appType));
 		if($appType=='ios') $payManagement=new smartAppWechatPay($this->getConf($appType));
+		if($appType=='miniApp') $payManagement=new smartAppWechatPay($this->getConf($appType));
 		if(!$payManagement) throw new SmartException("error appType");
 		//申请支付
 		return $payManagement->applyPay($command);

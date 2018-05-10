@@ -6,5 +6,5 @@ use yii\base\Component;
 use yii\base\SmartException;
 abstract class smartPayManagement extends Component{
 	//申请支付
-	abstract public function applyPay($command);
+	abstract public function applyPay($command,smartWechatPay $smartWechatPay);
 }

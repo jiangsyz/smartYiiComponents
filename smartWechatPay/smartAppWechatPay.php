@@ -9,8 +9,6 @@ class smartAppWechatPay extends smartPayManagement{
 	public $appId=NULL;
 	//商户号
 	public $mchId=NULL;
-	//商户平台设置的密钥key
-	public $mchSecret=NULL;
 	//回调地址
 	public $notifyUrl=NULL;
 	//设备号
@@ -29,18 +27,15 @@ class smartAppWechatPay extends smartPayManagement{
 		$this->nonceStr=md5(rand(1,99999));
 		//客户端ip
 		$this->spbillCreateIp=$_SERVER['REMOTE_ADDR'];
-		//交易类型
-		//$this->tradeType='APP';
 		//校验
 		if(!$this->appId) throw new SmartException("miss appId");
 		if(!$this->mchId) throw new SmartException("miss mchId");
-		if(!$this->mchSecret) throw new SmartException("miss mchSecret");
 		if(!$this->notifyUrl) throw new SmartException("miss notifyUrl");
 		if(!$this->deviceInfo) throw new SmartException("miss deviceInfo");
 	}
 	//========================================
 	//申请支付
-	public function applyPay($command){
+	public function applyPay($command,smartWechatPay $smartWechatPay){
 		//校验指令集的必须项
 		if(!isset($command['attach'])) throw new SmartException("cmd miss attach");
 		if(!isset($command['body'])) throw new SmartException("cmd miss body");
@@ -53,7 +48,7 @@ class smartAppWechatPay extends smartPayManagement{
 		$command['nonce_str']=$this->nonceStr;
 		$command['spbill_create_ip']=$this->spbillCreateIp;
 		$command['trade_type']=$this->tradeType;
-		$command['sign']=$this->sign($command);
+		$command['sign']=$smartWechatPay->sign($command,$this->mchId);
 		//拼接xml
 		$xml="<xml>";
 		$xml.="<appid>{$command['appid']}</appid>";
@@ -78,20 +73,8 @@ class smartAppWechatPay extends smartPayManagement{
 		$sdkData['package']='Sign=WXPay';
 		$sdkData['noncestr']=$this->nonceStr;
 		$sdkData['timestamp']=time();
-		$sdkData['sign']=$this->sign($sdkData);
+		$sdkData['sign']=$smartWechatPay->sign($sdkData,$this->mchId);
 		return $sdkData;
-	}
-	//========================================
-	//签名
-	private function sign($command){
-		//生成签名第一步:对参数按照key=value的格式，并按照参数名ASCII字典序排序如下
-		ksort($command);
-		$string="";
-		foreach($command as $k=>$v) $string.=$string?"&{$k}={$v}":"{$k}={$v}";
-		//生成签名第二步:拼接API密钥
-		$stringSignTemp="{$string}&key={$this->mchSecret}";
-		//生成签名第三步:md5
-		return strtoupper(md5($stringSignTemp));
 	}
 	//========================================
 	//微信支付统一下单

@@ -15,12 +15,12 @@ class smartAppWechatPay extends smartPayManagement{
 	public $notifyUrl=NULL;
 	//设备号
 	public $deviceInfo=NULL;
+	//交易类型
+	public $tradeType=NULL;
 	//随机字符串
 	public $nonceStr=false;
 	//客户端ip
 	public $spbillCreateIp=false;
-	//交易类型
-	public $tradeType=false;
 	//========================================
 	//初始化
 	public function init(){
@@ -30,7 +30,7 @@ class smartAppWechatPay extends smartPayManagement{
 		//客户端ip
 		$this->spbillCreateIp=$_SERVER['REMOTE_ADDR'];
 		//交易类型
-		$this->tradeType='APP';
+		//$this->tradeType='APP';
 		//校验
 		if(!$this->appId) throw new SmartException("miss appId");
 		if(!$this->mchId) throw new SmartException("miss mchId");

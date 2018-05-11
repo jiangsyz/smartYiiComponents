@@ -25,7 +25,7 @@ class smartIdentifyingCodeOrder extends SmartActiveRecord{
 	//========================================
 	//初始化数据
 	public function initData(){
-		$this->identifyingCode=rand(111111,999999);
+		if(!$this->identifyingCode) $this->identifyingCode=rand(111111,999999);
 		$this->createTime=time();
 		$this->state=0;
 	}

@@ -9,6 +9,8 @@ class smartWechatPay extends Component{
 	public $payConf=NULL;
 	//商户配置
 	public $mchConf=NULL;
+	//退款配置
+	public $refundConf=NULL;
 	//========================================
 	//根据商户id获取商户密钥
 	private function getMchSecret($mchId){
@@ -50,5 +52,30 @@ class smartWechatPay extends Component{
 		if(!$payManagement) throw new SmartException("error appType");
 		//申请支付
 		return $payManagement->applyPay($command,$this);
+	}
+	//========================================
+	//退款
+	public function refund($command){
+		$smartWechatRefund=new smartWechatRefund($this->refundConf);
+		$smartWechatRefund->refund($command,$this);
+	}
+	//========================================
+	//获取退款通知结果
+	public function getRefundResult($mchId,$reqInfo){
+		//对商户key做md5,得到32位小写key
+		$key=md5($this->getMchSecret($mchId));
+		//返回结果
+		return $this->refundDecrypt($reqInfo,$key);
+	}
+	//========================================
+	//解密退款通知
+	public function refundDecrypt($str,$key){  
+        $str=base64_decode($str);  
+        $str=mcrypt_decrypt(MCRYPT_RIJNDAEL_128,$key,$str,MCRYPT_MODE_ECB);  
+        $block=mcrypt_get_block_size('rijndael_128','ecb');  
+        $pad=ord($str[($len=strlen($str))-1]);
+        $len=strlen($str); 
+        $pad=ord($str[$len-1]);  
+        return substr($str,0,strlen($str)-$pad);  
 	}
 }

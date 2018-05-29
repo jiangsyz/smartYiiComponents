@@ -36,11 +36,17 @@ class smartAppWechatPay extends smartPayManagement{
 	//========================================
 	//申请支付
 	public function applyPay($command,smartWechatPay $smartWechatPay){
+		//日志
+        Yii::$app->smartLog->debugLog(json_encode($command));
 		//校验指令集的必须项
 		if(!isset($command['attach'])) throw new SmartException("cmd miss attach");
 		if(!isset($command['body'])) throw new SmartException("cmd miss body");
 		if(!isset($command['out_trade_no'])) throw new SmartException("cmd miss outTradeNo");
 		if(!isset($command['total_fee'])) throw new SmartException("cmd miss totalFee");
+		//JSAPI支付一定需要openid
+		if($this->tradeType=='JSAPI' && !$command['openid']) throw new SmartException("cmd error openid");
+		//非JSAPI支付不需要openid
+		elseif($this->tradeType!='JSAPI') unset($command['openid']);
 		//完善指令集
 		$command['appid']=$this->appId;
 		$command['mch_id']=$this->mchId;
@@ -61,6 +67,7 @@ class smartAppWechatPay extends smartPayManagement{
 		$xml.="<spbill_create_ip>{$command['spbill_create_ip']}</spbill_create_ip>";
 		$xml.="<total_fee>{$command['total_fee']}</total_fee>";
 		$xml.="<trade_type>{$command['trade_type']}</trade_type>";
+		if(isset($command['openid'])) $xml.="<openid>{$command['openid']}</openid>";
 		$xml.="<sign>{$command['sign']}</sign>";
 		$xml.="</xml>";
 		//微信支付统一下单,获取预支付交易会话标识

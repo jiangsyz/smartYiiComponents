@@ -23,15 +23,15 @@ class smartToken extends smartComponentsNeedDb{
 	}
 	//====================================================
 	//获取令牌
-	public function getToken($tokenStr,$type=array()){
+	public function getToken($tokenStr,$type=array(),$checkTimeOut=true){
 		//查找令牌
-		$token=smartTokenRecord::find()->where("`token`='{$tokenStr}' AND `isTimeOut`='0'")->one();
+		$token=smartTokenRecord::find()->where("`token`='{$tokenStr}'")->one();
 		//没找到
 		if(!$token) return NULL;
 		//校验type
 		if(!empty($type) && !in_array($token->type,$type)) return NULL;
 		//校验超时
-		if($token->isTimeOut()) return NULL;
+		if($token->isTimeOut() && $checkTimeOut) return NULL;
 		//返回令牌
 		return $token;
 	}

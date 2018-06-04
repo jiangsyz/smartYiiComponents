@@ -21,13 +21,13 @@ class luosimaoSender extends smsSender{
 		$postData['mobile']=$phone;
 		$postData['message']=$this->title.$msg."【".$this->signature."】";
 		//调用api
-		$reponse=Yii::$app->smartApi->post(self::URI,$postData,array(CURLOPT_USERPWD=>'api:key-'.$this->key));
-		if(!$reponse['state']) throw new SmartException($reponse['reponse']);
+		$response=Yii::$app->smartApi->post(self::URI,$postData,array(CURLOPT_USERPWD=>'api:key-'.$this->key));
+		if(!$response['state']) throw new SmartException($response['response']);
 		//处理数据
-		$reponse=json_decode($reponse['reponse'],true);
+		$response=json_decode($response['response'],true);
 		//处理返回值
-		if(!isset($reponse['error'])) throw new SmartException("error reponse");
-		switch($reponse['error']){
+		if(!isset($response['error'])) throw new SmartException("error response");
+		switch($response['error']){
 			case 0:return true;
 			case -10:throw new SmartException("验证信息失败");
 			case -20:throw new SmartException("短信余额不足");
@@ -38,7 +38,7 @@ class luosimaoSender extends smsSender{
 			case -41:throw new SmartException("号码因频繁发送");
 			case -42:throw new SmartException("验证码类短信发送频率过快");
 			case -50:throw new SmartException("请求发送IP不在白名单内");
-			default:throw new SmartException("未知错误".$reponse['error']);
+			default:throw new SmartException("未知错误".$response['error']);
 		}
 	}
 }

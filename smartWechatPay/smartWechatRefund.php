@@ -49,20 +49,20 @@ class smartWechatRefund extends Component{
 		$curlConf[CURLOPT_SSLKEY]=getcwd().'/apiclient_key.pem';
 		$curlConf[CURLOPT_CAINFO]=getcwd().'/rootca.pem';
 		$curlConf[CURLOPT_HTTPHEADER]=array("Content-type: text/xml");
-		$reponse=Yii::$app->smartApi->post($api,$xml,$curlConf);
+		$response=Yii::$app->smartApi->post($api,$xml,$curlConf);
 		//检查结果集数据
-		if(!isset($reponse['state']))
-			throw new SmartException("callUnifiedorderApi reponse miss state");
-		if(!isset($reponse['reponse']))
-			throw new SmartException("callUnifiedorderApi reponse miss reponse");
-		if(!$reponse['state'])
-			throw new SmartException("callUnifiedorderApi reponse error {$reponse['reponse']}");
+		if(!isset($response['state']))
+			throw new SmartException("callUnifiedorderApi response miss state");
+		if(!isset($response['response']))
+			throw new SmartException("callUnifiedorderApi response miss response");
+		if(!$response['state'])
+			throw new SmartException("callUnifiedorderApi response error {$response['response']}");
 		//api返回的xml结果,将其转换为数组
 		libxml_disable_entity_loader(true);
-		$reponse=simplexml_load_string($reponse['reponse'],'SimpleXMLElement',LIBXML_NOCDATA);
-		$reponse=json_decode(json_encode($reponse),true);
+		$response=simplexml_load_string($response['response'],'SimpleXMLElement',LIBXML_NOCDATA);
+		$response=json_decode(json_encode($response),true);
 		//调用失败
-		if(!(isset($reponse['result_code']) && $reponse['result_code']=="SUCCESS"))
+		if(!(isset($response['result_code']) && $response['result_code']=="SUCCESS"))
 			throw new SmartException("call wx fund api error");
 	}
 }

@@ -13,13 +13,13 @@ class smartWechat extends Component{
 	public function jscode2session($jscode){
 		$uri="https://api.weixin.qq.com/sns/jscode2session?appid={$this->appID}&secret={$this->appSecret}&js_code={$jscode}&grant_type=authorization_code";
 		//调用接口
-		$reponse=Yii::$app->smartApi->get($uri,array(CURLOPT_SSL_VERIFYPEER=>false));
+		$response=Yii::$app->smartApi->get($uri,array(CURLOPT_SSL_VERIFYPEER=>false));
 		//处理数据
-		$reponse=json_decode($reponse['reponse'],true);
-		if(!isset($reponse['session_key'])) throw new SmartException("获取session_key失败",-2);
-		if(!isset($reponse['openid'])) throw new SmartException("获取openid失败",-2);
+		$response=json_decode($response['response'],true);
+		if(!isset($response['session_key'])) throw new SmartException("获取session_key失败",-2);
+		if(!isset($response['openid'])) throw new SmartException("获取openid失败",-2);
 		//返回数据
-		return array('sessionKey'=>$reponse['session_key'],'openid'=>$reponse['openid']);
+		return array('sessionKey'=>$response['session_key'],'openid'=>$response['openid']);
 	}
 	//========================================
 	//解码用户加密信息

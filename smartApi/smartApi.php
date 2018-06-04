@@ -19,12 +19,12 @@ class smartApi extends Component{
 	//执行curl_exec,并确定状态和结果
 	private function curlExec($ch){
 		//请求接口
-		$reponse=curl_exec($ch);
+		$response=curl_exec($ch);
 		//确定状态和结果
-		$state=$reponse===false?false:true;
-		$reponse=$reponse===false?curl_error($ch):$reponse;
+		$state=$response===false?false:true;
+		$response=$response===false?curl_error($ch):$response;
 		//返回状态和结果
-		return array('state'=>$state,'reponse'=>$reponse);
+		return array('state'=>$state,'response'=>$response);
 	}
 	//========================================
 	//get方法请求
@@ -40,7 +40,7 @@ class smartApi extends Component{
 		//请求接口
 		$re=$this->curlExec($ch);
 		//记录日志
-		$this->log(json_encode(array('type'=>'get','uri'=>$uri,'reponse'=>$re)));
+		$this->log(json_encode(array('type'=>'get','uri'=>$uri,'response'=>$re)));
 		//关闭句柄
 		curl_close($ch);
 		//返回api数据
@@ -62,7 +62,7 @@ class smartApi extends Component{
 		//请求接口
 		$re=$this->curlExec($ch);
 		//记录日志
-		$this->log(json_encode(array('type'=>'post','uri'=>$uri,'data'=>$postData,'reponse'=>$re)));
+		$this->log(json_encode(array('type'=>'post','uri'=>$uri,'data'=>$postData,'response'=>$re)));
 		//关闭句柄
 		curl_close($ch);
 		//返回api数据

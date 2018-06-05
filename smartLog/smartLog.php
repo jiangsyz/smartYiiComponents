@@ -13,6 +13,7 @@ class smartLog extends smartComponentsNeedDb{
 	const CALL_API_LOG=2;//调用api日志
 	const EXCEPTION_LOG=4;//异常日志
 	const DEBUG_LOG=8;//调试日志
+	const CONSOLE_LOG=16;//命令行日志
 	//====================================================
 	private function log($logType,$data){
 		//该类型在配置中被关闭
@@ -20,6 +21,8 @@ class smartLog extends smartComponentsNeedDb{
 		//记录日志
 		$logRecord=array();
 		$logRecord['runningId']=Yii::$app->controller->runningId;
+		$logRecord['controllerId']=Yii::$app->controller->id;
+		$logRecord['actionId']=Yii::$app->controller->action->id;
 		$logRecord['logType']=$logType;
 		$logRecord['data']=$data;
 		$logRecord['time']=time();
@@ -30,4 +33,5 @@ class smartLog extends smartComponentsNeedDb{
 	public function callApiLog($data){return $this->log(self::CALL_API_LOG,$data);}
 	public function exceptionLog($data){return $this->log(self::EXCEPTION_LOG,$data);}
 	public function debugLog($data){return $this->log(self::DEBUG_LOG,$data);}
+	public function consoleLog($data){return $this->log(self::CONSOLE_LOG,$data);}
 }

@@ -15,7 +15,7 @@ class smartWechatPay extends Component{
 	//根据商户id获取商户密钥
 	private function getMchSecret($mchId){
 		if(!isset($this->mchConf[$mchId])) 
-			throw new SmartException("miss mchConf");
+			throw new SmartException("miss mchConf {$mchId}");
 		else 
 			return $this->mchConf[$mchId];
 	}

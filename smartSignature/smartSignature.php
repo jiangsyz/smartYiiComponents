@@ -68,6 +68,7 @@ class smartSignature extends Component{
 		{"addressId":"8","areaId":"140201","detail":"\u7a81\u7136\u6709\u4e00"}^ZS2018LCJ
 		所以要逐个参数转成中文
 		*/
+		/*
 		foreach($requestData as $k => $v){
 			$requestData[$k]=preg_replace_callback(
 				"#\\\u([0-9a-f]+)#i",
@@ -76,6 +77,10 @@ class smartSignature extends Component{
 		}
 		//json编码(JSON_UNESCAPED_UNICODE是为了不要把中文再变成unicode)
 		$requestData=json_encode($requestData,JSON_UNESCAPED_UNICODE);
+		*/
+		$requestData=json_encode($requestData,JSON_UNESCAPED_UNICODE);
+		//json_encode会把/变成\/,所以我们要通过stripslashes把\/变回/
+		$requestData=stripslashes($requestData);
 		//连接密钥
 		$requestData=$requestData."^".$this->secretKey;
 		//签名

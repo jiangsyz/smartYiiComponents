@@ -8,6 +8,7 @@ class smartWechat extends Component{
 	const API_ACCESS_TOKEN="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential";
 	const API_JSCODE_TO_CODE="https://api.weixin.qq.com/sns/jscode2session?";
 	const API_GET_USER="https://api.weixin.qq.com/cgi-bin/user/get";
+	const API_GET_USER_INFO_BATCH="https://api.weixin.qq.com/cgi-bin/user/info/batchget";
 	//========================================
 	//通过jscode获取sessionKey和openid
 	public function jscode2session($appId,$appSecret,$jscode){
@@ -77,8 +78,8 @@ class smartWechat extends Component{
 			if(!isset($response['next_openid'])) throw new SmartException("获取next_openid失败",-2);
 			//调用借口
 			$uri=self::API_GET_USER."?access_token={$accessToken}&next_openid={$response['next_openid']}";
-			//处理数据
 			$response=Yii::$app->smartApi->get($uri,array(CURLOPT_SSL_VERIFYPEER=>false));
+			//处理数据
 			$response=json_decode($response['response'],true);
 			if(!isset($response['count'])) throw new SmartException("获取count失败",-2);
 			if(!isset($response['data']['openid'])) throw new SmartException("获取openid失败",-2);
@@ -89,5 +90,31 @@ class smartWechat extends Component{
 		}
 		//返回openid列表
 		return $openids;
+	}
+	//========================================
+	//获取公众号用户的unionid
+	public function getUnionidsFromPublicAccount($appId,$appSecret,$openids){
+		//最多只接收100个openid
+		if(count($openids)>100) throw new SmartException("openids count > 100");
+		//获取accessToken
+		$accessToken=$this->getAccessToken($appId,$appSecret);
+		//组织参数
+		$param['user_list']=array();
+		foreach($openids as $v) $param['user_list'][]=array('openid'=>$v,'lang'=>'zh-CN');
+		$param=json_encode($param);
+		//调用接口
+		$uri=self::API_GET_USER_INFO_BATCH."?access_token={$accessToken}";
+		$response=Yii::$app->smartApi->post($uri,$param,array(CURLOPT_SSL_VERIFYPEER=>false));
+		//处理数据
+		$response=json_decode($response['response'],true);
+		if(!isset($response['user_info_list'])) throw new SmartException("获取user_info_list失败",-2);
+		//以openid为key,unionid为val作为数据返回
+		$unionids=array();
+		foreach($response['user_info_list'] as $v){
+			if(!isset($v['openid'])) continue;
+			if(!isset($v['unionid'])) continue;
+			$unionids[$v['openid']]=$v['unionid'];
+		}
+		return $unionids;
 	}
 }

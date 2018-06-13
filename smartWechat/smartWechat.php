@@ -9,6 +9,7 @@ class smartWechat extends Component{
 	const API_JSCODE_TO_CODE="https://api.weixin.qq.com/sns/jscode2session?";
 	const API_GET_USER="https://api.weixin.qq.com/cgi-bin/user/get";
 	const API_GET_USER_INFO_BATCH="https://api.weixin.qq.com/cgi-bin/user/info/batchget";
+	const API_GET_USER_INFO="https://api.weixin.qq.com/cgi-bin/user/info";
 	//========================================
 	//通过jscode获取sessionKey和openid
 	public function jscode2session($appId,$appSecret,$jscode){
@@ -92,10 +93,8 @@ class smartWechat extends Component{
 		return $openids;
 	}
 	//========================================
-	//获取公众号用户的unionid
+	//获取公众号用户的unionid(批量)
 	public function getUnionidsFromPublicAccount($appId,$appSecret,$openids){
-		//最多只接收100个openid
-		if(count($openids)>100) throw new SmartException("openids count > 100");
 		//获取accessToken
 		$accessToken=$this->getAccessToken($appId,$appSecret);
 		//组织参数
@@ -116,5 +115,19 @@ class smartWechat extends Component{
 			$unionids[$v['openid']]=$v['unionid'];
 		}
 		return $unionids;
+	}
+	//========================================
+	//获取公众号用户的unionid
+	public function getUnionidFromPublicAccount($appId,$appSecret,$openid){
+		//获取accessToken
+		$accessToken=$this->getAccessToken($appId,$appSecret);
+		//调用接口
+		$uri=self::API_GET_USER_INFO."?access_token={$accessToken}&openid=$openid&lang=zh_CN";
+		$response=Yii::$app->smartApi->get($uri,array(CURLOPT_SSL_VERIFYPEER=>false));
+		//处理数据
+		$response=json_decode($response['response'],true);
+		if(!isset($response['unionid'])) throw new SmartException("miss unionid");
+		//返回unionid
+		return $response['unionid'];
 	}
 }

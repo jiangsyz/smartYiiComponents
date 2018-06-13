@@ -23,6 +23,8 @@ class smartApi extends Component{
 		//确定状态和结果
 		$state=$response===false?false:true;
 		$response=$response===false?curl_error($ch):$response;
+		//日志
+		$this->log->debugLog($response);
 		//返回状态和结果
 		return array('state'=>$state,'response'=>$response);
 	}

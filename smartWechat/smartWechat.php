@@ -130,4 +130,30 @@ class smartWechat extends Component{
 		//返回unionid
 		return $response['unionid'];
 	}
+	//========================================
+	//推送公众号消息
+	public function pushTemplateMsg($appId,$appSecret,$data){
+		//校验参数
+		if(!isset($data['openid'])) throw new SmartException("data miss openid");
+		if(!isset($data['templateId'])) throw new SmartException("data miss templateId");
+		if(!isset($data['msgData'])) throw new SmartException("data miss msgData");
+		if(!isset($data['miniAppId'])) throw new SmartException("data miss miniAppId");
+		if(!isset($data['miniPagepath'])) throw new SmartException("data miss miniPagepath");
+		//组织参数
+		$param=array();
+		$param['touser']=$data['openid'];//接收者openid
+		$param['template_id']=$data['templateId'];//模板ID
+		$param['data']=$data['msgData'];//模板数据
+		$param['appid']=$data['miniAppId'];//所需跳转到的小程序appid
+		$param=json_encode($param);
+		//获取accessToken
+		$accessToken=$this->getAccessToken($appId,$appSecret);
+		//调用接口
+		$uri=self::API_SEND_TEMPLATE_MSG."?access_token={$accessToken}";
+		$response=Yii::$app->smartApi->post($uri,$param,array(CURLOPT_SSL_VERIFYPEER=>false));
+		//处理数据
+		$response=json_decode($response['response'],true);
+		var_dump($response);
+		exit;
+	}
 }

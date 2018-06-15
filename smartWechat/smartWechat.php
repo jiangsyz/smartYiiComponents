@@ -10,6 +10,7 @@ class smartWechat extends Component{
 	const API_GET_USER="https://api.weixin.qq.com/cgi-bin/user/get";
 	const API_GET_USER_INFO_BATCH="https://api.weixin.qq.com/cgi-bin/user/info/batchget";
 	const API_GET_USER_INFO="https://api.weixin.qq.com/cgi-bin/user/info";
+	const API_SEND_TEMPLATE_MSG="https://api.weixin.qq.com/cgi-bin/message/template/send";
 	//========================================
 	//通过jscode获取sessionKey和openid
 	public function jscode2session($appId,$appSecret,$jscode){

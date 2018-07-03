@@ -12,6 +12,9 @@ class smartWechat extends Component{
 	const API_GET_USER_INFO="https://api.weixin.qq.com/cgi-bin/user/info";
 	const API_SEND_TEMPLATE_MSG="https://api.weixin.qq.com/cgi-bin/message/template/send";
 	//========================================
+	//获取缓存accessToken的key
+	private function getAccessTokenCacheKey($appId){return "{$appId}accessToken";}
+	//========================================
 	//通过jscode获取sessionKey和openid
 	public function jscode2session($appId,$appSecret,$jscode){
 		//调用接口
@@ -40,9 +43,9 @@ class smartWechat extends Component{
 	//获取accessToken
 	public function getAccessToken($appId,$appSecret){
 		//确定索引
-		$index="{$appId}_accessToken";
+		$index=$this->getAccessTokenCacheKey();
 		//先尝试从redis中尝试获取
-		$accessToken=Yii::$app->redis->get($index);
+		$accessToken=Yii::$app->cache->get($index);
 		if($accessToken) return $accessToken;
 		//调用接口		
 		$uri=self::API_ACCESS_TOKEN."&appid={$appId}&secret={$appSecret}";
@@ -52,7 +55,7 @@ class smartWechat extends Component{
 		if(!isset($response['access_token'])) throw new SmartException("获取accessToken失败",-2);
 		if(!isset($response['expires_in'])) throw new SmartException("获取expiresIn失败",-2);
 		//缓存
-		Yii::$app->cache->set($index,$response['access_token'],$response['expires_in']); 
+		Yii::$app->cache->set($index,$response['access_token'],$response['expires_in']);
 		//返回令牌
 		return $response['access_token'];
 	}

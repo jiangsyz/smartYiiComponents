@@ -126,7 +126,7 @@ class smartWechat extends Component{
 		//获取accessToken
 		$accessToken=$this->getAccessToken($appId,$appSecret);
 		//调用接口
-		$uri=self::API_GET_USER_INFO."?access_token={$accessToken}&openid=$openid&lang=zh_CN";
+		$uri=self::API_GET_USER_INFO."?access_token={$accessToken}&openid={$openid}&lang=zh_CN";
 		$response=Yii::$app->smartApi->get($uri,array(CURLOPT_SSL_VERIFYPEER=>false));
 		//处理数据
 		$response=json_decode($response['response'],true);

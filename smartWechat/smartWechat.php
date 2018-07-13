@@ -43,7 +43,7 @@ class smartWechat extends Component{
 	//获取accessToken
 	public function getAccessToken($appId,$appSecret){
 		//确定索引
-		$index=$this->getAccessTokenCacheKey();
+		$index=$this->getAccessTokenCacheKey($appId);
 		//先尝试从redis中尝试获取
 		$accessToken=Yii::$app->cache->get($index);
 		if($accessToken) return $accessToken;

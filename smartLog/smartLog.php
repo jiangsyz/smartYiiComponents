@@ -26,7 +26,10 @@ class smartLog extends smartComponentsNeedDb{
 		$logRecord['logType']=$logType;
 		$logRecord['data']=$data;
 		$logRecord['time']=time();
-		return smartLogRecord::addObj($logRecord);
+		if($logType==self::HTTP_LOG) 
+			return smartLogRecord::addObj($logRecord);
+		else
+			return smartLogRecordBak::addObj($logRecord);
 	}
 	//====================================================
 	public function httpLog($data){return $this->log(self::HTTP_LOG,$data);}

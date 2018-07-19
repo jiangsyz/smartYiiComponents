@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 120.132.20.205
--- Generation Time: 2018-07-11 08:55:01
+-- Generation Time: 2018-07-19 15:59:53
 -- 服务器版本： 5.5.58-log
 -- PHP Version: 5.6.13
 
@@ -11,12 +11,6 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `smart_store_log`
@@ -46,7 +40,8 @@ CREATE TABLE `smart_log_record_bak` (
 -- Indexes for table `smart_log_record_bak`
 --
 ALTER TABLE `smart_log_record_bak`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `runningId` (`runningId`);
 
 --
 -- 在导出的表使用AUTO_INCREMENT
@@ -58,7 +53,3 @@ ALTER TABLE `smart_log_record_bak`
 ALTER TABLE `smart_log_record_bak`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键';
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -11,6 +11,7 @@ class smartWechat extends Component{
 	const API_GET_USER_INFO_BATCH="https://api.weixin.qq.com/cgi-bin/user/info/batchget";
 	const API_GET_USER_INFO="https://api.weixin.qq.com/cgi-bin/user/info";
 	const API_SEND_TEMPLATE_MSG="https://api.weixin.qq.com/cgi-bin/message/template/send";
+	const API_BATCHGET_MATERIAL="https://api.weixin.qq.com/cgi-bin/material/batchget_material";
 	//========================================
 	//获取缓存accessToken的key
 	private function getAccessTokenCacheKey($appId){return "{$appId}accessToken";}
@@ -154,6 +155,25 @@ class smartWechat extends Component{
 		$accessToken=$this->getAccessToken($appId,$appSecret);
 		//调用接口
 		$uri=self::API_SEND_TEMPLATE_MSG."?access_token={$accessToken}";
+		$response=Yii::$app->smartApi->post($uri,$param,array(CURLOPT_SSL_VERIFYPEER=>false));
+		//处理数据
+		$response=json_decode($response['response'],true);
+		var_dump($response);
+		exit;
+	}
+	//========================================
+	//拉取图像素材列表
+	public function getImageList($appId,$appSecret){
+		//组织参数
+		$param=array();
+		$param['type']='image';
+		$param['offset']=0;
+		$param['count']=20;
+		$param=json_encode($param);
+		//获取accessToken
+		$accessToken=$this->getAccessToken($appId,$appSecret);
+		//调用接口
+		$uri=self::API_BATCHGET_MATERIAL."?access_token={$accessToken}";
 		$response=Yii::$app->smartApi->post($uri,$param,array(CURLOPT_SSL_VERIFYPEER=>false));
 		//处理数据
 		$response=json_decode($response['response'],true);
